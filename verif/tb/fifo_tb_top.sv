@@ -26,7 +26,16 @@
 `include "fifo_monitor.sv"
 `include "fifo_scoreboard.sv"
 `include "fifo_env.sv"
-`include "fifo_tests.sv"
+`include "fifo_test_base.sv"
+`include "test_basic_rw.sv"
+`include "test_fill_drain_wrap.sv"
+`include "test_burst_streaming.sv"
+`include "test_flag_behavior.sv"
+`include "test_data_integrity.sv"
+`include "test_overflow_underflow.sv"
+`include "test_reset_scenarios.sv"
+`include "test_clock_ratio.sv"
+`include "test_stress.sv"
 
 module fifo_tb_top;
 
