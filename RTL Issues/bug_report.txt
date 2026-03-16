@@ -1,0 +1,142 @@
+================================================================================
+                    BUG REPORT: ASYNC_FIFO_E vs Asynchronous-FIFO
+================================================================================
+
+================================================================================
+fifo_top.sv
+================================================================================
+
+Error 1:
+  Missing `timescale 1ns/1ps directive at the top of the file.
+
+Error 2:
+  Line 43 - Trailing COMMA instead of SEMICOLON at end of g_wptr, g_rptr declaration:
+
+  Buggy:   reg [PTR_WIDTH:0] g_wptr, g_rptr,
+  Correct: reg [PTR_WIDTH:0] g_wptr, g_rptr;
+
+Error 3:
+  Line 49 - Missing SEMICOLON at end of waddr, raddr wire declaration:
+
+  Buggy:   wire [PTR_WIDTH-1:0] waddr, raddr
+  Correct: wire [PTR_WIDTH-1:0] waddr, raddr;
+
+Error 4:
+  Line 84 - Missing DOT on port .fifo_empty in rptr_handler instantiation:
+
+  Buggy:    fifo_empty (fifo_empty)
+  Correct: .fifo_empty (fifo_empty)
+
+Error 5:
+  Line 87 - Wrong MODULE NAME used for memory instantiation. fifo_memory does not
+  exist; the correct module is fifo_mem, and parameters are missing:
+
+  Buggy:   fifo_memory fifom (
+  Correct: fifo_mem #(FIFO_DEPTH, FIFO_WIDTH, PTR_WIDTH) fifom (
+
+Error 6:
+  Line 88 - Missing DOT on port wrclk in the fifo_mem instantiation:
+
+  Buggy:    wrclk (wrclk),
+  Correct: .wrclk (wrclk),
+
+Error 7:
+  Line 97 - TRAILING COMMA after the last port .data_out in the instantiation
+  port list (syntax error):
+
+  Buggy:   .data_out (data_out),
+  Correct: .data_out (data_out)
+
+================================================================================
+wrptr_handler.sv
+================================================================================
+
+Error 8:
+  Line 27 - Port declared as rd_en instead of wr_en in the write pointer handler
+  (wrong signal entirely):
+
+  Buggy:   input wrclk, wrst_n, rd_en,
+  Correct: input wrclk, wrst_n, wr_en,
+
+Error 9:
+  Line 39 - Write pointer incremented using rd_en instead of wr_en:
+
+  Buggy:   assign b_wptr_next = b_wptr + (rd_en & !fifo_full);
+  Correct: assign b_wptr_next = b_wptr + (wr_en & !fifo_full);
+
+Error 10:
+  Lines 44-45 - Write pointer reset values are non-zero. Both b_wptr and g_wptr
+  must reset to 0:
+
+  Buggy:   b_wptr <= 4;
+           g_wptr <= 2;
+  Correct: b_wptr <= 0;
+           g_wptr <= 0;
+
+Error 11:
+  Line 58 - Full-flag uses BINARY b_wptr_next instead of GRAY-CODED g_wptr_next
+  for the comparison. The full condition requires comparing Gray codes -- mixing
+  binary with Gray produces a completely wrong result:
+
+  Buggy:   assign wfull = (b_wptr_next == {~g_rptr_sync[PTR_WIDTH:PTR_WIDTH-1], g_rptr_sync[PTR_WIDTH-2:0]});
+  Correct: assign wfull = (g_wptr_next == {~g_rptr_sync[PTR_WIDTH:PTR_WIDTH-1], g_rptr_sync[PTR_WIDTH-2:0]});
+
+================================================================================
+rdptr_handler.sv
+================================================================================
+
+Error 12:
+  Line 27 - Port declared as wr_en instead of rd_en in the read pointer handler:
+
+  Buggy:   input rdclk, rrst_n, wr_en,
+  Correct: input rdclk, rrst_n, rd_en,
+
+Error 13:
+  Line 36 - Read pointer incremented using wr_en instead of rd_en:
+
+  Buggy:   assign b_rptr_next = b_rptr + (wr_en & !fifo_empty);
+  Correct: assign b_rptr_next = b_rptr + (rd_en & !fifo_empty);
+
+Error 14:
+  Line 38 - Empty-flag compares Gray-coded g_wptr_sync against BINARY b_rptr_next
+  instead of GRAY-CODED g_rptr_next -- a domain mismatch that makes the empty
+  flag unreliable:
+
+  Buggy:   assign rempty = (g_wptr_sync == b_rptr_next);
+  Correct: assign rempty = (g_wptr_sync == g_rptr_next);
+
+================================================================================
+fifo_memory.sv
+================================================================================
+
+Error 15:
+  Line 35 - Write guard condition uses fifo_empty instead of !fifo_full. Writes
+  should be allowed when the FIFO is NOT FULL, not when it is empty:
+
+  Buggy:   if (wr_en & fifo_empty)
+  Correct: if (wr_en & !fifo_full)
+
+Error 16:
+  Line 42 - Read guard condition uses fifo_full instead of !fifo_empty. Reads
+  should be allowed when the FIFO is NOT EMPTY, not when it is full:
+
+  Buggy:   if (rd_en & fifo_full)
+  Correct: if (rd_en & !fifo_empty)
+
+================================================================================
+SUMMARY
+================================================================================
+
+  File                  | Errors | Description
+  ----------------------|--------|----------------------------------------------
+  fifo_top.sv           |   7    | 1 missing timescale, 2 syntax/semicolon,
+                        |        | 4 instantiation errors
+  wrptr_handler.sv      |   4    | Wrong port, wrong enable, wrong reset,
+                        |        | wrong pointer type in full check
+  rdptr_handler.sv      |   3    | Wrong port, wrong enable,
+                        |        | wrong pointer type in empty check
+  fifo_memory.sv        |   2    | Inverted guard conditions on write and read
+  ----------------------|--------|----------------------------------------------
+  TOTAL                 |  16    |
+
+================================================================================
