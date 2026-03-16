@@ -1,0 +1,32 @@
+//
+// File created by:  xrun
+// Do not modify this file
+//
+-XLMODE
+./xcelium.d/run.lnx86.24.09.d
+-RUNMODE
+-DEFINE
+DUMP_ON
+-DEFINE
+CADENCE
+-INCDIR
+/scratch/users/sdash/Async-FIFO-/verif/tb/
+/scratch/users/sdash/Async-FIFO-/rtl/synchronizer.sv
+/scratch/users/sdash/Async-FIFO-/rtl/fifo_memory.sv
+/scratch/users/sdash/Async-FIFO-/rtl/wrptr_handler.sv
+/scratch/users/sdash/Async-FIFO-/rtl/rdptr_handler.sv
+/scratch/users/sdash/Async-FIFO-/rtl/fifo_top.sv
+/scratch/users/sdash/Async-FIFO-/verif/tb/fifo_tb_top.sv
+-NOWARN
+_AAMNSD
+-sv
+-CDSLIB
+./xcelium.d/run.lnx86.24.09.d/cdsrun.lib
+-HDLVAR
+./xcelium.d/run.lnx86.24.09.d/hdlrun.var
+-no_analogsolver
+-MESSAGES
+-UPDATE
+-XLLIBSTORE
+./xcelium.d/run.lnx86.24.09.d/xllibs
+-ALLOWUNBOUND

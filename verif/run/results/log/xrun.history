@@ -1,0 +1,2 @@
+#e1(16Mar2026:16:53:31): source ./xcelium.d/env.d/env.history.16Mar2026_16_53_31
+s1(16Mar2026:16:53:31):  xrun +define+DUMP_ON +define+CADENCE -incdir /scratch/users/sdash/Async-FIFO-/verif/tb/ -f /scratch/users/sdash/Async-FIFO-/rtl/sig_async_fifo_flst.f -f /scratch/users/sdash/Async-FIFO-/verif/tb/sig_async_fifo_simple_tb.f -svseed 1234 +nowarn_AAMNSD +access+rw -disable_sem2009 +sv +timescale+1ns/1ps +TEST_NAME=all 
