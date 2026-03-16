@@ -22,6 +22,7 @@
  
  * Description   :
  _._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._*/
+ `timescale 1ns/1ps
  module fifo_mem #(parameter FIFO_DEPTH=8, FIFO_WIDTH=16, PTR_WIDTH=3) (
    input wrclk, wr_en, rdclk, rd_en,
    input [PTR_WIDTH:0] b_wptr, b_rptr,

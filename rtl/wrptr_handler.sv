@@ -22,7 +22,7 @@
  
  * Description   :
  _._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._*/
-
+`timescale 1ns/1ps
  module wptr_handler #(parameter PTR_WIDTH=3) (
    input wrclk, wrst_n, wr_en, // FIX #8: was 'rd_en', corrected to 'wr_en'
    input [PTR_WIDTH:0] g_rptr_sync,

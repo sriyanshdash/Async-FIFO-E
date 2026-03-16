@@ -23,9 +23,9 @@ endif
 xrun \
 +define+DUMP_ON \
 +define+CADENCE \
--incdir $SIG_FIFO_HOME/verif/tb_simple/ \
+-incdir $SIG_FIFO_HOME/verif/tb/ \
 -f $SIG_FIFO_HOME/rtl/sig_async_fifo_flst.f \
--f $SIG_FIFO_HOME/verif/tb_simple/sig_async_fifo_simple_tb.f  \
+-f $SIG_FIFO_HOME/verif/tb/sig_async_fifo_simple_tb.f  \
 -svseed 1234 \
 +nowarn_AAMNSD \
 +access+rw \

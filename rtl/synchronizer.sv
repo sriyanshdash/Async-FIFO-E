@@ -22,7 +22,7 @@
  
  * Description   :
  _._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._._*/
- 
+ `timescale 1ns/1ps
  module synchronizer #(parameter WIDTH=3) (input clk, rst_n, [WIDTH:0] d_in, output reg [WIDTH:0] d_out);
    reg [WIDTH:0] q1;
    always@(posedge clk) begin

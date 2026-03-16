@@ -12,4 +12,4 @@
 // =============================================================================
 
 // ---- TB Top (includes all other TB files) ----
-${SIG_FIFO_HOME}/verif/tb_simple/fifo_tb_top.sv
+${SIG_FIFO_HOME}/verif/tb/fifo_tb_top.sv
